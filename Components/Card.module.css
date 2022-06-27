@@ -1,0 +1,35 @@
+.bold{
+    font-weight: 800;
+    padding: 0px;
+    margin: 0px;
+  }
+  
+  .highlight{
+    color: rgb(203, 180, 5);
+  }
+  
+  .highlight2{
+    color: rgb(98, 223, 57);
+  }
+  
+  .highlight3{
+    color: rgb(176, 33, 33);
+  }
+  
+  .highlight4{
+    font-weight: 100;
+  }
+  
+  .details{
+    margin-left: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .dataTitle{
+    margin-bottom: 10px;
+  }
+  
+  .details p{
+    padding: 0px;
+    margin: 0px;
+  }

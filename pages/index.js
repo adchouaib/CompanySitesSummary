@@ -1,9 +1,52 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import logoPic from "../public/photo.jpg";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import styles from "../styles/Home.module.css";
+import { sanityClient } from "../sanity";
+import Card from "../Components/Card";
+
+export default function Home({ data, weeks }) {
+  const [openedZone, setOpenedZone] = useState("");
+  const [selectedWeek, setSelectedWeek] = useState(0);
+  const [zonesData , setZonesData] = useState(data);
+
+  const Zone1 = zonesData.find((element) => element.zone.name == "Zone1");
+  const Zone2 = zonesData.find((element) => element.zone.name == "Zone2");
+  const Zone3 = zonesData.find((element) => element.zone.name == "Zone3");
+  const Zone4 = zonesData.find((element) => element.zone.name == "Zone4");
+  const Zone5 = zonesData.find((element) => element.zone.name == "Zone5");
+  const Zone6 = zonesData.find((element) => element.zone.name == "Zone6");
+  const Zone7 = zonesData.find((element) => element.zone.name == "Zone7");
+
+  const fetchData = async (dataQuery) => {
+    try {
+      const data = await sanityClient.fetch(dataQuery);
+      if (data) {
+        setZonesData(data);
+      }
+    } catch(error) {
+      console.log(error);
+    }
+  } 
+
+  useEffect(() => {
+    const query = weeklyQuery(selectedWeek);
+    fetchData(query);
+  }, [selectedWeek]);
+
+
+  const weekOptions = weeks.map((week) => (
+    <option key={week.weekNumber} value={week.weekNumber}>
+      {"Semaine " + week.weekNumber}
+    </option>
+  ));
+
+  
+
   return (
+    
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
@@ -11,59 +54,250 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      <main>
+        <div className={styles.Navigation}>
+          <div>
+            <select
+              className={styles.button1}
+              onChange={(e) => setSelectedWeek(e.target.value)}
+            >
+              {weekOptions}
+            </select>
+            <button className={styles.button2}>{weeks.find(w => w.weekNumber == selectedWeek).avancement} %</button>
+            <button className={styles.button3}>{weeks.find(w => w.weekNumber == selectedWeek).retard} jours</button>
+            <button className={styles.button4}>{weeks.find(w => w.weekNumber == selectedWeek).budget} $</button>
+          </div>
+          <div className={styles.CompanyLogo}>
+            <Image src={logoPic} width={50} height={50} />
+          </div>
+        </div>
+        <div className={styles.main}>
+          <div
+            className={
+              openedZone == "Zone1" ? styles.zone1Activated : styles.zone1
+            }
+            onClick={() => {
+              setOpenedZone(openedZone == "Zone1" ? "" : "Zone1");
+            }}
+          />
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+          {openedZone == "Zone1" && typeof Zone1 != "undefined" && (
+            <div className={styles.Zone1Card}>
+              <div className={styles.Card}>
+                {
+                  <Card
+                    avancementGlobal={Zone1.avancementGlobal}
+                    companies={Zone1.companies}
+                    evolution={Zone1.evolution}
+                    retard={Zone1.retard}
+                    motif={Zone1.motif}
+                    id={Zone1._id}
+                  />
+                }
+              </div>
+            </div>
+          )}
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+          <div
+            className={
+              openedZone == "Zone2" ? styles.zone2Activated : styles.zone2
+            }
+            onClick={() => {
+              setOpenedZone(openedZone == "Zone2" ? "" : "Zone2");
+            }}
+          />
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+          {openedZone == "Zone2" && typeof Zone2 != "undefined" && (
+            <div className={styles.Zone1Card}>
+              <div className={styles.Card2}>
+                {
+                  <Card
+                    avancementGlobal={Zone2.avancementGlobal}
+                    companies={Zone2.companies}
+                    evolution={Zone2.evolution}
+                    retard={Zone2.retard}
+                    motif={Zone2.motif}
+                    id={Zone2._id}
+                  />
+                }
+              </div>
+            </div>
+          )}
 
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+          <div
+            className={
+              openedZone == "Zone3" ? styles.zone3Activated : styles.zone3
+            }
+            onClick={() => {
+              setOpenedZone(openedZone == "Zone3" ? "" : "Zone3");
+            }}
+          />
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          {openedZone == "Zone3" && typeof Zone3 != "undefined" && (
+            <div className={styles.Zone3Card}>
+              <div className={styles.Card3}>
+                {
+                  <Card
+                    avancementGlobal={Zone3.avancementGlobal}
+                    companies={Zone3.companies}
+                    evolution={Zone3.evolution}
+                    retard={Zone3.retard}
+                    motif={Zone3.motif}
+                    id={Zone3._id}
+                  />
+                }
+              </div>
+            </div>
+          )}
+
+          <div
+            className={
+              openedZone == "Zone4" ? styles.zone4Activated : styles.zone4
+            }
+            onClick={() => {
+              setOpenedZone(openedZone == "Zone4" ? "" : "Zone4");
+            }}
+          />
+
+          {openedZone == "Zone4" && typeof Zone4 != "undefined" && (
+            <div className={styles.Zone4Card}>
+              <div className={styles.Card4}>
+                {
+                  <Card
+                    avancementGlobal={Zone4.avancementGlobal}
+                    companies={Zone4.companies}
+                    evolution={Zone4.evolution}
+                    retard={Zone4.retard}
+                    motif={Zone4.motif}
+                    id={Zone4._id}
+                  />
+                }
+              </div>
+            </div>
+          )}
+
+          <div
+            className={
+              openedZone == "Zone5" ? styles.zone5Activated : styles.zone5
+            }
+            onClick={() => {
+              setOpenedZone(openedZone == "Zone5" ? "" : "Zone5");
+            }}
+          />
+
+          {openedZone == "Zone5" && typeof Zone5 != "undefined" && (
+            <div className={styles.Zone5Card}>
+              <div className={styles.Card5}>
+                {
+                  <Card
+                    avancementGlobal={Zone5.avancementGlobal}
+                    companies={Zone5.companies}
+                    evolution={Zone5.evolution}
+                    retard={Zone5.retard}
+                    motif={Zone5.motif}
+                    id={Zone5._id}
+                  />
+                }
+              </div>
+            </div>
+          )}
+
+          <div
+            className={
+              openedZone == "Zone6" ? styles.zone6Activated : styles.zone6
+            }
+            onClick={() => {
+              setOpenedZone(openedZone == "Zone6" ? "" : "Zone6");
+            }}
+          />
+
+          {openedZone == "Zone6" && typeof Zone6 != "undefined" && (
+            <div className={styles.Zone6Card}>
+              <div className={styles.Card6}>
+                {
+                  <Card
+                    avancementGlobal={Zone6.avancementGlobal}
+                    companies={Zone6.companies}
+                    evolution={Zone6.evolution}
+                    retard={Zone6.retard}
+                    motif={Zone6.motif}
+                    id={Zone6._id}
+                  />
+                }
+              </div>
+            </div>
+          )}
+
+          <div
+            className={
+              openedZone == "Zone7" ? styles.zone7Activated : styles.zone7
+            }
+            onClick={() => {
+              setOpenedZone(openedZone == "Zone7" ? "" : "Zone7");
+            }}
+          />
+
+          {openedZone == "Zone7" && typeof Zone7 != "undefined" && (
+            <div className={styles.Zone7Card}>
+              <div className={styles.Card7}>
+                {
+                  <Card
+                    avancementGlobal={Zone7.avancementGlobal}
+                    companies={Zone7.companies}
+                    evolution={Zone7.evolution}
+                    retard={Zone7.retard}
+                    motif={Zone7.motif}
+                    id={Zone7._id}
+                  />
+                }
+              </div>
+            </div>
+          )}
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
-  )
+  );
 }
+
+const weeklyQuery = (weekNumber) => {
+  const query = `
+  *[_type == "data" && week._ref in *[_type=="week" && weekNumber==${weekNumber}]._id]{
+    _id,
+    week,
+    avancementGlobal,
+    evolution,
+    retard,
+    motif,
+    companies,
+    zone -> {
+    id,
+    name
+  },
+  week -> {
+    weekNumber
+  }
+  }
+  `;
+  return query;
+};
+
+export const getStaticProps = async () => {
+  const query = weeklyQuery(0);
+  const weekQuery = `
+  *[_type == "week"]{
+    weekNumber,
+    avancement,
+    retard,
+    budget
+  }`;
+
+  const weeks = await sanityClient.fetch(weekQuery);
+  const data = await sanityClient.fetch(query);
+
+  return {
+    props: {
+      data,
+      weeks,
+    },
+  };
+};
