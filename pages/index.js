@@ -281,7 +281,7 @@ const weeklyQuery = (weekNumber) => {
   return query;
 };
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   const query = weeklyQuery(0);
   const weekQuery = `
   *[_type == "week"]{
