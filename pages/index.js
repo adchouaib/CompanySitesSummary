@@ -289,7 +289,7 @@ export const getServerSideProps = async () => {
     avancement,
     retard,
     budget
-  }`;
+  } | order(weekNumber asc)`;
 
   const weeks = await sanityClient.fetch(weekQuery);
   const data = await sanityClient.fetch(query);
