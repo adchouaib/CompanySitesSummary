@@ -11,30 +11,49 @@ export default function Home({ data, weeks }) {
   const [openedZone, setOpenedZone] = useState("");
   const [selectedWeek, setSelectedWeek] = useState(0);
   const [zonesData , setZonesData] = useState(data);
-
-  const Zone1 = zonesData.find((element) => element.zone.name == "Zone1");
-  const Zone2 = zonesData.find((element) => element.zone.name == "Zone2");
-  const Zone3 = zonesData.find((element) => element.zone.name == "Zone3");
-  const Zone4 = zonesData.find((element) => element.zone.name == "Zone4");
-  const Zone5 = zonesData.find((element) => element.zone.name == "Zone5");
-  const Zone6 = zonesData.find((element) => element.zone.name == "Zone6");
-  const Zone7 = zonesData.find((element) => element.zone.name == "Zone7");
+  const [Zone1,setZone1] = useState(data.find((element) => element.zone.name == "Zone1"));
+  const [Zone2,setZone2] = useState(data.find((element) => element.zone.name == "Zone2"));
+  const [Zone3,setZone3] = useState(data.find((element) => element.zone.name == "Zone3"));
+  const [Zone4,setZone4] = useState(data.find((element) => element.zone.name == "Zone4"));
+  const [Zone5,setZone5] = useState(data.find((element) => element.zone.name == "Zone5"));
+  const [Zone6,setZone6] = useState(data.find((element) => element.zone.name == "Zone6"));
+  const [Zone7,setZone7] = useState(data.find((element) => element.zone.name == "Zone7"));
+  // const Zone1 = zonesData.find((element) => element.zone.name == "Zone1");
+  // const Zone2 = zonesData.find((element) => element.zone.name == "Zone2");
+  // const Zone3 = zonesData.find((element) => element.zone.name == "Zone3");
+  // const Zone4 = zonesData.find((element) => element.zone.name == "Zone4");
+  // const Zone5 = zonesData.find((element) => element.zone.name == "Zone5");
+  // const Zone6 = zonesData.find((element) => element.zone.name == "Zone6");
+  // const Zone7 = zonesData.find((element) => element.zone.name == "Zone7");
 
   const fetchData = async (dataQuery) => {
     try {
       const data = await sanityClient.fetch(dataQuery);
       if (data) {
         setZonesData(data);
+        setZone1(data.find(((element) => element.zone.name == "Zone1")));
+        setZone2(data.find(((element) => element.zone.name == "Zone2")));
+        setZone3(data.find(((element) => element.zone.name == "Zone3")));
+        setZone4(data.find(((element) => element.zone.name == "Zone4")));
+        setZone5(data.find(((element) => element.zone.name == "Zone5")));
+        setZone6(data.find(((element) => element.zone.name == "Zone6")));
+        setZone7(data.find(((element) => element.zone.name == "Zone7")));
       }
     } catch(error) {
       console.log(error);
     }
   } 
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   const query = weeklyQuery(selectedWeek);
+  //   fetchData(query);
+  // }, [selectedWeek]);
+
+  const fetchWeekData = (value) => {
+    setSelectedWeek(value);
     const query = weeklyQuery(selectedWeek);
     fetchData(query);
-  }, [selectedWeek]);
+  }
 
 
   const weekOptions = weeks.map((week) => (
@@ -59,7 +78,7 @@ export default function Home({ data, weeks }) {
           <div>
             <select
               className={styles.button1}
-              onChange={(e) => setSelectedWeek(e.target.value)}
+              onChange={(e) => fetchWeekData(e.target.value)}
             >
               {weekOptions}
             </select>
