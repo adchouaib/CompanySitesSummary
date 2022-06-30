@@ -7,54 +7,82 @@ import styles from "../styles/Home.module.css";
 import { sanityClient } from "../sanity";
 import Card from "../Components/Card";
 
-export default function Home({ data, weeks }) {
+export default function Home() {
   const [openedZone, setOpenedZone] = useState("");
+  const [weeks, setWeeks] = useState([]);
+  const [data, setData] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState(0);
-  const [zonesData , setZonesData] = useState(data);
-  const [Zone1,setZone1] = useState(data.find((element) => element.zone.name == "Zone1"));
-  const [Zone2,setZone2] = useState(data.find((element) => element.zone.name == "Zone2"));
-  const [Zone3,setZone3] = useState(data.find((element) => element.zone.name == "Zone3"));
-  const [Zone4,setZone4] = useState(data.find((element) => element.zone.name == "Zone4"));
-  const [Zone5,setZone5] = useState(data.find((element) => element.zone.name == "Zone5"));
-  const [Zone6,setZone6] = useState(data.find((element) => element.zone.name == "Zone6"));
-  const [Zone7,setZone7] = useState(data.find((element) => element.zone.name == "Zone7"));
-  // const Zone1 = zonesData.find((element) => element.zone.name == "Zone1");
-  // const Zone2 = zonesData.find((element) => element.zone.name == "Zone2");
-  // const Zone3 = zonesData.find((element) => element.zone.name == "Zone3");
-  // const Zone4 = zonesData.find((element) => element.zone.name == "Zone4");
-  // const Zone5 = zonesData.find((element) => element.zone.name == "Zone5");
-  // const Zone6 = zonesData.find((element) => element.zone.name == "Zone6");
-  // const Zone7 = zonesData.find((element) => element.zone.name == "Zone7");
+  const [Zone1, setZone1] = useState(
+    data.find((element) => element.zone.name == "Zone1")
+  );
+  const [Zone2, setZone2] = useState(
+    data.find((element) => element.zone.name == "Zone2")
+  );
+  const [Zone3, setZone3] = useState(
+    data.find((element) => element.zone.name == "Zone3")
+  );
+  const [Zone4, setZone4] = useState(
+    data.find((element) => element.zone.name == "Zone4")
+  );
+  const [Zone5, setZone5] = useState(
+    data.find((element) => element.zone.name == "Zone5")
+  );
+  const [Zone6, setZone6] = useState(
+    data.find((element) => element.zone.name == "Zone6")
+  );
+  const [Zone7, setZone7] = useState(
+    data.find((element) => element.zone.name == "Zone7")
+  );
 
-  const fetchData = async (dataQuery) => {
-    try {
-      const data = await sanityClient.fetch(dataQuery);
+  useEffect(() => {
+    const fetchInitialdata = async () => {
+      const query = weeklyQuery(0);
+      const weekQuery = `
+    *[_type == "week"]{
+      weekNumber,
+      avancement,
+      retard,
+      budget
+    } | order(weekNumber asc)`;
+
+      const weeks = await sanityClient.fetch(weekQuery);
+      const data = await sanityClient.fetch(query);
+
+      setWeeks(weeks);
+      setData(data);
+      setZone1(data.find((element) => element.zone.name == "Zone1"));
+      setZone2(data.find((element) => element.zone.name == "Zone2"));
+      setZone3(data.find((element) => element.zone.name == "Zone3"));
+      setZone4(data.find((element) => element.zone.name == "Zone4"));
+      setZone5(data.find((element) => element.zone.name == "Zone5"));
+      setZone6(data.find((element) => element.zone.name == "Zone6"));
+      setZone7(data.find((element) => element.zone.name == "Zone7"));
+    };
+
+    fetchInitialdata();
+  }, []);
+
+  useEffect(() => {
+    const fetchChangedData = async () => {
+      const query = weeklyQuery(selectedWeek);
+      const data = await sanityClient.fetch(query);
       if (data) {
-        setZonesData(data);
-        setZone1(data.find(((element) => element.zone.name == "Zone1")));
-        setZone2(data.find(((element) => element.zone.name == "Zone2")));
-        setZone3(data.find(((element) => element.zone.name == "Zone3")));
-        setZone4(data.find(((element) => element.zone.name == "Zone4")));
-        setZone5(data.find(((element) => element.zone.name == "Zone5")));
-        setZone6(data.find(((element) => element.zone.name == "Zone6")));
-        setZone7(data.find(((element) => element.zone.name == "Zone7")));
+        setZone1(data.find((element) => element.zone.name == "Zone1"));
+        setZone2(data.find((element) => element.zone.name == "Zone2"));
+        setZone3(data.find((element) => element.zone.name == "Zone3"));
+        setZone4(data.find((element) => element.zone.name == "Zone4"));
+        setZone5(data.find((element) => element.zone.name == "Zone5"));
+        setZone6(data.find((element) => element.zone.name == "Zone6"));
+        setZone7(data.find((element) => element.zone.name == "Zone7"));
       }
-    } catch(error) {
-      console.log(error);
-    }
-  } 
+    };
 
-  // useEffect(() => {
-  //   const query = weeklyQuery(selectedWeek);
-  //   fetchData(query);
-  // }, [selectedWeek]);
+    fetchChangedData();
+  }, [selectedWeek]);
 
-  const fetchWeekData = (value) => {
+  const fetchWeekData = async (value) => {
     setSelectedWeek(value);
-    const query = weeklyQuery(selectedWeek);
-    fetchData(query);
-  }
-
+  };
 
   const weekOptions = weeks.map((week) => (
     <option key={week.weekNumber} value={week.weekNumber}>
@@ -62,10 +90,7 @@ export default function Home({ data, weeks }) {
     </option>
   ));
 
-  
-
   return (
-    
     <div className={styles.container}>
       <Head>
         <title>Create Next App</title>
@@ -82,9 +107,15 @@ export default function Home({ data, weeks }) {
             >
               {weekOptions}
             </select>
-            <button className={styles.button2}>{weeks.find(w => w.weekNumber == selectedWeek).avancement} %</button>
-            <button className={styles.button3}>{weeks.find(w => w.weekNumber == selectedWeek).retard} jours</button>
-            <button className={styles.button4}>{weeks.find(w => w.weekNumber == selectedWeek).budget} $</button>
+            <button className={styles.button2}>
+              {weeks.find((w) => w.weekNumber == selectedWeek)?.avancement} %
+            </button>
+            <button className={styles.button3}>
+              {weeks.find((w) => w.weekNumber == selectedWeek)?.retard} jours
+            </button>
+            <button className={styles.button4}>
+              {weeks.find((w) => w.weekNumber == selectedWeek)?.budget} $
+            </button>
           </div>
           <div className={styles.CompanyLogo}>
             <Image src={logoPic} width={50} height={50} />
@@ -298,25 +329,4 @@ const weeklyQuery = (weekNumber) => {
   }
   `;
   return query;
-};
-
-export const getServerSideProps = async () => {
-  const query = weeklyQuery(0);
-  const weekQuery = `
-  *[_type == "week"]{
-    weekNumber,
-    avancement,
-    retard,
-    budget
-  } | order(weekNumber asc)`;
-
-  const weeks = await sanityClient.fetch(weekQuery);
-  const data = await sanityClient.fetch(query);
-
-  return {
-    props: {
-      data,
-      weeks,
-    },
-  };
 };
