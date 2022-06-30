@@ -7,6 +7,8 @@ import styles from "../styles/Home.module.css";
 import { sanityClient } from "../sanity";
 import Card from "../Components/Card";
 
+import { useRouter } from "next/router";
+
 export default function Home() {
   const [openedZone, setOpenedZone] = useState("");
   const [weeks, setWeeks] = useState([]);
