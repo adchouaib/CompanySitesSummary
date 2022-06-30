@@ -5,11 +5,11 @@ import {
 } from "next-sanity";
 
 export const config = {
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: "production",
+  projectId: "xga11qul",
   apiVersion: "2022-06-26",
 
-  useCdn: process.env.NODE_ENV === "production",
+  useCdn: true,
 };
 
 export const sanityClient = createClient(config);
