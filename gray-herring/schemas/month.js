@@ -1,12 +1,12 @@
 export default {
-  name: "week",
+  name: "month",
   type: "document",
-  title: "Week",
+  title: "Month",
   fields: [
     {
-      name: "weekNumber",
+      name: "monthNumber",
       type: "number",
-      title: "Week Number",
+      title: "Month Number",
       validation: (Rule) => Rule.required(),
     },
     {

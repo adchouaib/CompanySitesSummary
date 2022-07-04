@@ -7,8 +7,17 @@
     align-items: center;
     padding: 10px;
   }
+
+.Navigation > div {
+  display: flex;
+}
   
-  @media only screen and (max-width: 600px) {
+.labelContainer{
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+}
+@media only screen and (max-width: 600px) {
     .Navigation {
       flex-direction: column;
       justify-content: center;
@@ -18,13 +27,22 @@
   
   .CompanyLogo{
     position: absolute;
-    right: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .CompanyLogo span{
+    margin: 0;
+    padding: 0 0 0 5px;
+    text-align: start;
   }
   
   .button1, .button2, .button3, .button4{
     margin: 5px 10px;
     padding: 5px 30px;
-    width: 170px;
+    width: 130px;
     border-radius: 10px;
     border: none;
     font-weight: 700;

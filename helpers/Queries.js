@@ -1,8 +1,8 @@
-export const weeklyQuery = (weekNumber) => {
+export const monthlyQuery = (monthNumber) => {
     const query = `
-    *[_type == "data" && week._ref in *[_type=="week" && weekNumber==${weekNumber}]._id]{
+    *[_type == "data" && month._ref in *[_type=="month" && monthNumber==${monthNumber}]._id]{
       _id,
-      week,
+      month,
       avancementGlobal,
       evolution,
       retard,
@@ -12,8 +12,8 @@ export const weeklyQuery = (weekNumber) => {
       id,
       name
     },
-    week -> {
-      weekNumber
+    month -> {
+      monthNumber
     }
     }
     `;

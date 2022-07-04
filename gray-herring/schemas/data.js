@@ -11,10 +11,10 @@ export default {
       validation: (Rule) => Rule.required(),
     },
     {
-      name: "week",
+      name: "month",
       type: "reference",
-      title: "Week",
-      to: { type: "week" },
+      title: "Month",
+      to: { type: "month" },
       validation: (Rule) => Rule.required(),
     },
     {

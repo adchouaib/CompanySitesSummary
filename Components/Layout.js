@@ -8,15 +8,24 @@ import { useEffect, useState } from "react";
 import { sanityClient } from "../sanity";
 import Card from "./Card";
 
-import { weeklyQuery } from "../helpers/Queries";
+import { monthlyQuery } from "../helpers/Queries";
 
-import styles from './Layout.module.css';
+import styles from "./Layout.module.css";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import {
+  faCalendar,
+  faLevelUp,
+  faClock,
+  faMoneyBill,
+} from "@fortawesome/free-solid-svg-icons";
 
 function Layout() {
   const [openedZone, setOpenedZone] = useState("");
-  const [weeks, setWeeks] = useState([]);
+  const [months, setMonths] = useState([]);
   const [data, setData] = useState([]);
-  const [selectedWeek, setSelectedWeek] = useState(0);
+  const [selectedMonth, setSelectedMonth] = useState(0);
   const [Zone1, setZone1] = useState(
     data.find((element) => element.zone.name == "Zone1")
   );
@@ -41,19 +50,19 @@ function Layout() {
 
   useEffect(() => {
     const fetchInitialdata = async () => {
-      const query = weeklyQuery(0);
-      const weekQuery = `
-      *[_type == "week"]{
-        weekNumber,
+      const query = monthlyQuery(0);
+      const monthQuery = `
+      *[_type == "month"]{
+        monthNumber,
         avancement,
         retard,
         budget
-      } | order(weekNumber asc)`;
+      } | order(monthNumber asc)`;
 
-      const weeks = await sanityClient.fetch(weekQuery);
+      const months = await sanityClient.fetch(monthQuery);
       const data = await sanityClient.fetch(query);
 
-      setWeeks(weeks);
+      setMonths(months);
       setData(data);
       setZone1(data.find((element) => element.zone.name == "Zone1"));
       setZone2(data.find((element) => element.zone.name == "Zone2"));
@@ -69,7 +78,7 @@ function Layout() {
 
   useEffect(() => {
     const fetchChangedData = async () => {
-      const query = weeklyQuery(selectedWeek);
+      const query = monthlyQuery(selectedMonth);
       const data = await sanityClient.fetch(query);
       if (data) {
         setZone1(data.find((element) => element.zone.name == "Zone1"));
@@ -83,15 +92,15 @@ function Layout() {
     };
 
     fetchChangedData();
-  }, [selectedWeek]);
+  }, [selectedMonth]);
 
-  const fetchWeekData = async (value) => {
-    setSelectedWeek(value);
+  const fetchMonthData = async (value) => {
+    setSelectedMonth(value);
   };
 
-  const weekOptions = weeks.map((week) => (
-    <option key={week.weekNumber} value={week.weekNumber}>
-      {"Semaine " + week.weekNumber}
+  const monthOptions = months.map((month) => (
+    <option key={month.monthNumber} value={month.monthNumber}>
+      {"Mois " + month.monthNumber}
     </option>
   ));
 
@@ -99,24 +108,51 @@ function Layout() {
     <main>
       <div className={styles.Navigation}>
         <div>
-          <select
-            className={styles.button1}
-            onChange={(e) => fetchWeekData(e.target.value)}
-          >
-            {weekOptions}
-          </select>
-          <button className={styles.button2}>
-            {weeks.find((w) => w.weekNumber == selectedWeek)?.avancement} %
-          </button>
-          <button className={styles.button3}>
-            {weeks.find((w) => w.weekNumber == selectedWeek)?.retard} jours
-          </button>
-          <button className={styles.button4}>
-            {weeks.find((w) => w.weekNumber == selectedWeek)?.budget} $
-          </button>
+          <div>
+            <div className={styles.labelContainer}>
+              <label className={styles.label}>Mois</label>
+              <FontAwesomeIcon icon={faCalendar} style={{ fontSize: 18 }} />
+            </div>
+            <select
+              className={styles.button1}
+              onChange={(e) => fetchMonthData(e.target.value)}
+            >
+              {monthOptions}
+            </select>
+          </div>
+          <div>
+            <div className={styles.labelContainer}>
+              <label className={styles.label}>Avancement</label>
+              <FontAwesomeIcon icon={faLevelUp} style={{ fontSize: 18 }} />
+            </div>
+            <button name="button2" className={styles.button2}>
+              {months.find((w) => w.monthNumber == selectedMonth)?.avancement} %
+            </button>
+          </div>
+          <div>
+            <div className={styles.labelContainer}>
+              <label className={styles.label}>Retard</label>
+              <FontAwesomeIcon icon={faClock} style={{ fontSize: 18 }} />
+            </div>
+            <button className={styles.button3}>
+              {months.find((w) => w.monthNumber == selectedMonth)?.retard} jours
+            </button>
+          </div>
+          <div>
+            <div className={styles.labelContainer}>
+              <label className={styles.label}>Budget</label>
+              <FontAwesomeIcon icon={faMoneyBill} style={{ fontSize: 18 }} />
+            </div>
+            <button className={styles.button4}>
+              {months.find((w) => w.monthNumber == selectedMonth)?.budget} $
+            </button>
+          </div>
         </div>
         <div className={styles.CompanyLogo}>
-          <Image src={logoPic} width={50} height={50} />
+          <Image src={logoPic} width={50} height={50} alt="Logo" />
+          <span>
+            Projet <br /> <b>MASSA</b>{" "}
+          </span>
         </div>
       </div>
       <div className={styles.main}>

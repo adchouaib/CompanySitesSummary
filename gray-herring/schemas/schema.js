@@ -7,7 +7,7 @@ import schemaTypes from 'all:part:@sanity/base/schema-type'
 import data from './data'
 import zone from './zone'
 import company from './company'
-import week from './week'
+import month from './month'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -15,7 +15,7 @@ export default createSchema({
   types: schemaTypes.concat([
     data,
     company,
-    week,
+    month,
     zone
   ]), 
 })
